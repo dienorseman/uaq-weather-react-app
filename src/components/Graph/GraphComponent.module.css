@@ -1,0 +1,11 @@
+.graph__container {
+    /* border: 1px solid var(--secondary); */
+    height: 504px;
+    width: 1400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: auto;
+    margin: auto;
+}

@@ -1,0 +1,65 @@
+.app__container {
+    position: relative;
+    /* border: 1px solid red; */
+    padding: 1rem;
+    margin: 1rem;
+    height: 800px;
+    width: 1600px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.theme__button__container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    margin: 1rem;
+    background-color: var(--secondary);
+    border-radius: 32px;
+    padding: 1rem;
+    height: 32px;
+    width: 80px;
+    transition: all 0.5s ease-in-out;
+}
+
+.theme__button__container__dark {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 1rem;
+    background-color: #6aff81;
+    border-radius: 32px;
+    padding: 1rem;
+    height: 32px;
+    width: 80px;
+    transition: all 0.5s ease-in-out;
+}
+
+.theme__button {
+    background-color: var(--primary);
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    transition: all 0.5s ease-in-out;
+    cursor: pointer;
+}
+
+.theme__button__dark {
+    cursor: pointer;
+    background-color: var(--primary);
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    transform: translateX(1.8rem);
+    transition: all 0.5s ease-in-out;
+}
