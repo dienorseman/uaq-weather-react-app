@@ -49,44 +49,16 @@ export const GraphComponent = ({ theme, tormenta = 'Tormenta 1' }) => {
                 ),
                 borderColor: 'rgb(53, 162, 235)',
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                yAxisID: 'y1',
+                yAxisID: 'y',
             },
         ],
     });
-
-    useEffect(() => {
-        setData({
-            labels,
-            datasets: [
-                {
-                    label: 'Dataset 1',
-                    data: labels.map(() =>
-                        // faker.datatype.number({ min: -1000, max: 1000 })
-                        Math.floor(Math.random() * 1000)
-                    ),
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    yAxisID: 'y',
-                },
-                {
-                    label: 'Dataset 2',
-                    data: labels.map(() =>
-                        // faker.datatype.number({ min: -1000, max: 1000 })
-                        Math.floor(Math.random() * 1000)
-                    ),
-                    borderColor: 'rgb(53, 162, 235)',
-                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                    yAxisID: 'y1',
-                },
-            ],
-        });
-    }, [tormenta]);
 
     const options = {
         responsive: true,
         interaction: {
             mode: 'index',
-            intersect: false,
+            intersect: true,
         },
         stacked: false,
         plugins: {
@@ -124,20 +96,45 @@ export const GraphComponent = ({ theme, tormenta = 'Tormenta 1' }) => {
                     },
                 },
             },
-            y1: {
-                type: 'linear',
-                display: true,
-                position: 'right',
-                grid: {
-                    drawOnChartArea: false,
-                },
-            },
+
         },
     };
 
-    return (
-        <div className={Styles.graph__container}>
-            <Line data={data} options={options} />
-        </div>
-    );
+
+
+    useEffect(() => {
+        setData({
+            labels,
+            datasets: [
+                {
+                    label: 'Dataset 1',
+                    data: labels.map(() =>
+                        // faker.datatype.number({ min: -1000, max: 1000 })
+                        Math.floor(Math.random() * 1000)
+                    ),
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    yAxisID: 'y',
+                },
+                {
+                    label: 'Dataset 2',
+                    data: labels.map(() =>
+                        // faker.datatype.number({ min: -1000, max: 1000 })
+                        Math.floor(Math.random() * 1000)
+                    ),
+                    borderColor: 'rgb(53, 162, 235)',
+                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                    yAxisID: 'y',
+                },
+            ],
+        });
+
+    }, [tormenta]);
+
+
+return (
+    <div className={Styles.graph__container}>
+        <Line data={data} options={options} />
+    </div>
+);
 };

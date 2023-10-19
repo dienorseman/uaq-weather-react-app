@@ -23,19 +23,31 @@ export const App = () => {
 
     return (
         <div className={Styles.app__container}>
-            <GraphMenu tormentas={tormentas} setTormenta={setTormenta} tormentaActual={tormenta}  />
-            <GraphComponent theme={theme} tormenta={tormenta} />
             <div
-                className={ theme === 'light' ? Styles.theme__button__container : Styles.theme__button__container__dark}
+                className={Styles.a__container}
+            >
+            <div
+                className={theme === 'light' ? Styles.theme__button__container : Styles.theme__button__container__dark}
             >
                 <button
                     // switch to index.css root variable
-                    className={ theme === 'light' ? Styles.theme__button : Styles.theme__button__dark }
+                    className={theme === 'light' ? Styles.theme__button : Styles.theme__button__dark}
                     onClick={() =>
                         setTheme(theme === 'light' ? 'dark' : 'light')
                     }
                 >
                 </button>
+            </div>
+            </div>
+            <div
+                className = {Styles.selectTormenta__container}
+            >
+            <GraphMenu tormentas={tormentas} setTormenta={setTormenta} tormentaActual={tormenta} />
+            </div>
+            <div
+                className={Styles.graph__container}
+            >
+            <GraphComponent theme={theme} tormenta={tormenta} />
             </div>
         </div>
     );
