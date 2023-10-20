@@ -21,6 +21,7 @@ export const App = () => {
         );
     }, [theme]);
 
+
     return (
         <div className={Styles.app__container}>
             <GraphMenu tormentas={tormentas} setTormenta={setTormenta} tormentaActual={tormenta}  />
@@ -29,7 +30,6 @@ export const App = () => {
                 className={ theme === 'light' ? Styles.theme__button__container : Styles.theme__button__container__dark}
             >
                 <button
-                    // switch to index.css root variable
                     className={ theme === 'light' ? Styles.theme__button : Styles.theme__button__dark }
                     onClick={() =>
                         setTheme(theme === 'light' ? 'dark' : 'light')

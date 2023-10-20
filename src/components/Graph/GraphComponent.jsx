@@ -1,143 +1,73 @@
 import { useEffect, useState } from 'react';
 
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-);
+    VictoryChart,
+    VictoryLine,
+    VictoryTheme,
+    VictoryScatter,
+} from 'victory';
 
 import Styles from './GraphComponent.module.css';
 
 export const GraphComponent = ({ theme, tormenta = 'Tormenta 1' }) => {
+    const dataSet1 = [2, 9, 3, 5, 2, 3, 1];
+    const dataSet2 = [1, 2, 3, 4, 5, 6, 7];
 
-    const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    const intersections = () => {
+        const intersections = [];
 
-    const [data, setData] = useState({
-        labels,
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: labels.map(() =>
-                    // faker.datatype.number({ min: -1000, max: 1000 })
-                    Math.floor(Math.random() * 1000)
-                ),
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                yAxisID: 'y',
-            },
-            {
-                label: 'Dataset 2',
-                data: labels.map(() =>
-                    // faker.datatype.number({ min: -1000, max: 1000 })
-                    Math.floor(Math.random() * 1000)
-                ),
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                yAxisID: 'y1',
-            },
-        ],
-    });
+        for (let i = 0; i < dataSet1.length - 1; i++) {
+            const slope1 = dataSet1[i + 1] - dataSet1[i];
+            const b1 = dataSet1[i] - slope1 * i;
 
-    useEffect(() => {
-        setData({
-            labels,
-            datasets: [
-                {
-                    label: 'Dataset 1',
-                    data: labels.map(() =>
-                        // faker.datatype.number({ min: -1000, max: 1000 })
-                        Math.floor(Math.random() * 1000)
-                    ),
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    yAxisID: 'y',
-                },
-                {
-                    label: 'Dataset 2',
-                    data: labels.map(() =>
-                        // faker.datatype.number({ min: -1000, max: 1000 })
-                        Math.floor(Math.random() * 1000)
-                    ),
-                    borderColor: 'rgb(53, 162, 235)',
-                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                    yAxisID: 'y1',
-                },
-            ],
-        });
-    }, [tormenta]);
+            const slope2 = dataSet2[i + 1] - dataSet2[i];
+            const b2 = dataSet2[i] - slope2 * i;
 
-    const options = {
-        responsive: true,
-        interaction: {
-            mode: 'index',
-            intersect: false,
-        },
-        stacked: false,
-        plugins: {
-            title: {
-                display: true,
-                text: `Precipitacion de ${tormenta}`,
-                font: {
-                    size: 20,
-                },
-            },
-        },
-        scales: {
-            x: {
-                grid: {
-                    color: () => {
-                        if (theme === 'light') {
-                            return 'rgba(0, 0, 0, 0.1)';
-                        } else {
-                            return 'rgba(255, 255, 255, 0.1)';
-                        }
-                    },
-                },
-            },
-            y: {
-                type: 'linear',
-                display: true,
-                position: 'left',
-                grid: {
-                    color: () => {
-                        if (theme === 'light') {
-                            return 'rgba(0, 0, 0, 0.1)';
-                        } else {
-                            return 'rgba(255, 255, 255, 0.1)';
-                        }
-                    },
-                },
-            },
-            y1: {
-                type: 'linear',
-                display: true,
-                position: 'right',
-                grid: {
-                    drawOnChartArea: false,
-                },
-            },
-        },
+            const x = (b2 - b1) / (slope1 - slope2);
+            const y = slope1 * x + b1;
+            // console.log(`y = ${slope1}x + ${b1}`, `y = ${slope2}x + ${b2}`);
+
+            if (slope1 !== slope2) {
+                // Asegurarse de que no son líneas paralelas
+                if (x >= i && x <= i + 1) {
+                    intersections.push({ x, y });
+                }
+            }
+        }
+
+        return intersections;
     };
 
     return (
         <div className={Styles.graph__container}>
-            <Line data={data} options={options} />
+            <VictoryChart theme={VictoryTheme.material}>
+                <VictoryLine
+                    style={{
+                        data: { stroke: '#c43a31' },
+                        parent: { border: '1px solid #ccc' },
+                    }}
+                    data={dataSet1.map((y, x) => ({ x, y }))}
+                />
+                <VictoryLine
+                    style={{
+                        data: { stroke: '#4fac3e' },
+                        parent: { border: '1px solid #ccc' },
+                    }}
+                    data={dataSet2.map((y, x) => ({ x, y }))}
+                />
+                <VictoryScatter
+                    style={{
+                        data: {
+                            fill: () => (theme === 'light' ? '#000' : '#fff'),
+                        },
+                        parent: { border: '1px solid #ccc' },
+                    }}
+                    labels={({ datum }) => `(${datum.x}, ${datum.y})`}
+                    size={5}
+                    data={intersections()}
+
+                />
+            </VictoryChart>
         </div>
     );
 };
