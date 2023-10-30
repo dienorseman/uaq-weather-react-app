@@ -3,8 +3,8 @@
     /* border: 1px solid red; */
     padding: 1rem;
     margin: 1rem;
-    height: 800px;
-    width: 1600px;
+    max-height: 800px;
+    max-width: 1600px;
     overflow: auto;
     display: flex;
     flex-direction: column;

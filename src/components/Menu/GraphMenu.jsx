@@ -1,24 +1,24 @@
 
 import Styles from './GraphMenu.module.css';
 
-export const GraphMenu = ({ tormentas = [], tormentaActual, setTormenta }) => {
+export const GraphMenu = ({ dataSheets = [], currentData, setData }) => {
 
     return (
         <div className={Styles.menu__container}>
-            <label htmlFor="">Selecciona una tormenta</label>
+            <label htmlFor="">Selecciona un data set</label>
             <select
                 className={Styles.menu__select}
-                value={tormentaActual}
-                onChange={(e) => setTormenta(e.target.value)}
+                value={currentData}
+                onChange={(e) => setData(e.target.value)}
             >
-                {tormentas
-                    ? tormentas.map((tormenta, index) => {
+                {dataSheets
+                    ? dataSheets.map((data, index) => {
                           return (
                               <option
                                   key={index}
-                                  value={tormenta}
+                                  value={data}
                               >
-                                  {tormenta}
+                                  {data}
                               </option>
                           );
                       })

@@ -6,9 +6,13 @@ import { GraphComponent } from './components/Graph/GraphComponent';
 export const App = () => {
     const [theme, setTheme] = useState('light');
 
-    const tormentas = ['Tormenta 1', 'Tormenta 2', 'Tormenta 3'];
+    // const tormentas = ['Tormenta 1', 'Tormenta 2', 'Tormenta 3'];
+    
+    const dataSheets = ['Data 1', 'Data 2', 'Data 3']
 
-    const [tormenta, setTormenta] = useState(tormentas[0]);
+    // const [tormenta, setTormenta] = useState(tormentas[0]);
+
+    const [currentDataSheet, setCurrentDataSheet] = useState(dataSheets[0]);
 
     useEffect(() => {
         document.documentElement.style.setProperty(
@@ -24,8 +28,8 @@ export const App = () => {
 
     return (
         <div className={Styles.app__container}>
-            <GraphMenu tormentas={tormentas} setTormenta={setTormenta} tormentaActual={tormenta}  />
-            <GraphComponent theme={theme} tormenta={tormenta} />
+            <GraphMenu currentData={currentDataSheet} setData={setCurrentDataSheet} dataSheets={dataSheets} />
+            <GraphComponent theme={theme} data={currentDataSheet} />
             <div
                 className={ theme === 'light' ? Styles.theme__button__container : Styles.theme__button__container__dark}
             >

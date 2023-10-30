@@ -5,11 +5,12 @@ import {
     VictoryLine,
     VictoryTheme,
     VictoryScatter,
+    VictoryTooltip,
 } from 'victory';
 
 import Styles from './GraphComponent.module.css';
 
-export const GraphComponent = ({ theme, tormenta = 'Tormenta 1' }) => {
+export const GraphComponent = ({ theme, data = 'Data 1' }) => {
 
     // const labels = []
 
@@ -71,11 +72,13 @@ export const GraphComponent = ({ theme, tormenta = 'Tormenta 1' }) => {
             () => Math.floor(Math.random() * 10) + 1
         );
         setDataSet2(tmpDataSet2);
-    }, [tormenta]);
+    }, [data]);
 
     return (
         <div className={Styles.graph__container}>
-            <VictoryChart theme={VictoryTheme.material} width={1600} height={600}>
+            <VictoryChart theme={VictoryTheme.material} width={740} height={290}
+                
+            >
                 <VictoryLine
                     style={{
                         data: { stroke: '#c43a31' },
@@ -98,6 +101,7 @@ export const GraphComponent = ({ theme, tormenta = 'Tormenta 1' }) => {
                         parent: { border: '1px solid #ccc' },
                     }}
                     labels={({ datum }) => `(${datum.x}, ${datum.y})`}
+                    labelComponent={<VictoryTooltip />}
                     size={5}
                     data={intersections()}
                     events={[
