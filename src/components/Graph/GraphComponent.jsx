@@ -6,35 +6,29 @@ import {
     VictoryTheme,
     VictoryScatter,
     VictoryTooltip,
+    VictoryAxis,
+    VictoryZoomContainer,
+    Log,
 } from 'victory';
 
 import Styles from './GraphComponent.module.css';
 
-export const GraphComponent = ({ theme, data = 'Data 1' }) => {
-
-    // const labels = []
-
-    // append 1000 labels rand between 0 and 100
-    // for (let i = 0; i < 20  ; i++) {
-    //     labels.push(Math.floor(Math.random() * 100) + 1);
-    // }
-    
-    // const dataSet1 = labels.map( () => Math.floor(Math.random() * 10) + 1);
-    // const dataSet2 = labels.map( () => Math.floor(Math.random() * 10) + 1);
-
-    // use above as useStates
-
+export const GraphComponent = ({ theme, dataSheet }) => {
     const [labels, setLabels] = useState([]);
 
     const [dataSet1, setDataSet1] = useState([]);
 
     const [dataSet2, setDataSet2] = useState([]);
 
-
     const intersections = () => {
         const intersections = [];
 
         for (let i = 0; i < dataSet1.length - 1; i++) {
+
+            dataSet1[i] = parseFloat(dataSet1[i]);
+            dataSet1[i + 1] = parseFloat(dataSet1[i + 1]);
+            dataSet2[i] = parseFloat(dataSet2[i]);
+            dataSet2[i + 1] = parseFloat(dataSet2[i + 1]);
             const slope1 = dataSet1[i + 1] - dataSet1[i];
             const b1 = dataSet1[i] - slope1 * i;
 
@@ -46,7 +40,6 @@ export const GraphComponent = ({ theme, data = 'Data 1' }) => {
             // console.log(`y = ${slope1}x + ${b1}`, `y = ${slope2}x + ${b2}`);
 
             if (slope1 !== slope2) {
-                // Asegurarse de que no son líneas paralelas
                 if (x >= i && x <= i + 1) {
                     x = Math.round(x * 100) / 100;
                     y = Math.round(y * 100) / 100;
@@ -54,31 +47,97 @@ export const GraphComponent = ({ theme, data = 'Data 1' }) => {
                 }
             }
         }
-
         return intersections;
     };
 
     useEffect(() => {
-        const tmpLabels = [];
-        for (let i = 0; i < 20; i++) {
-            tmpLabels.push(Math.floor(Math.random() * 100) + 1);
-        }
-        setLabels(tmpLabels);
-        const tmpDataSet1 = tmpLabels.map(
-            () => Math.floor(Math.random() * 10) + 1
-        );
-        setDataSet1(tmpDataSet1);
-        const tmpDataSet2 = tmpLabels.map(
-            () => Math.floor(Math.random() * 10) + 1
-        );
-        setDataSet2(tmpDataSet2);
-    }, [data]);
+        const data = async () => {
+            try {
+                const response = await fetch(dataSheet);
+
+                const data = await response.text();
+
+                // log Humidity column
+
+                const timeLabel = data
+                    .split('\n')
+                    .slice(1)
+                    .map((row) => row.split(',')[9]);
+
+                const tmpDataSet1 = data
+                    .split('\n')
+                    .slice(1)
+                    .map((row) => row.split(',')[5]);
+
+                const tmpDataSet2 = data
+                    .split('\n')
+                    .slice(1)
+                    .map( row => parseFloat(row.split(',')[22]));
+
+
+                setLabels(timeLabel);
+                setDataSet1(tmpDataSet1);
+                setDataSet2(tmpDataSet2);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        data();
+    }, [dataSheet]);
 
     return (
         <div className={Styles.graph__container}>
-            <VictoryChart theme={VictoryTheme.material} width={740} height={290}
-                
+            <VictoryChart
+                theme={VictoryTheme.material}
+                width={880}
+                height={320}
+                containerComponent={
+                    <VictoryZoomContainer
+                        zoomDimension={'x'}
+                        zoomDomain={{
+                            x: [0, 15],
+                            y: [0, 100],
+                        }}
+                    />
+                }
             >
+                <VictoryAxis
+                    // change name to time and put it on the bottom
+                    label="Time"
+                    style={{
+                        axis: {
+                            stroke: () => (theme === 'light' ? '#000' : '#fff'),
+                        },
+                        grid: {
+                            stroke: () =>
+                                theme === 'light' ? '#242424' : '#fff',
+                        },
+                        tickLabels: {
+                            fill: () => (theme === 'light' ? '#000' : '#fff'),
+                        },
+                    }}
+                    tickValues={labels.map((_) => {
+                        return typeof _ === 'string' ? _.slice(0, 5) : _;
+                    })}
+                />
+
+                <VictoryAxis
+                    dependentAxis
+                    style={{
+                        axis: {
+                            stroke: () => (theme === 'light' ? '#000' : '#fff'),
+                        },
+                        grid: {
+                            stroke: () =>
+                                theme === 'light' ? '#242424' : '#fff',
+                        },
+                        tickLabels: {
+                            fill: () => (theme === 'light' ? '#000' : '#fff'),
+                        },
+                    }}
+
+                />
+
                 <VictoryLine
                     style={{
                         data: { stroke: '#c43a31' },

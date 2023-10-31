@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import Styles from './App.module.css';
+
 import { GraphMenu } from './components/Menu/GraphMenu';
 import { GraphComponent } from './components/Graph/GraphComponent';
+
+// import data from './data/Candiles-24_25-junio-2013.csv';
+
+import Styles from './App.module.css';
 
 export const App = () => {
     const [theme, setTheme] = useState('light');
 
-    // const tormentas = ['Tormenta 1', 'Tormenta 2', 'Tormenta 3'];
-    
-    const dataSheets = ['Data 1', 'Data 2', 'Data 3']
-
-    // const [tormenta, setTormenta] = useState(tormentas[0]);
+    const [dataSheets, setDataSheets] = useState([]);
 
     const [currentDataSheet, setCurrentDataSheet] = useState(dataSheets[0]);
 
@@ -26,20 +26,32 @@ export const App = () => {
     }, [theme]);
 
 
+
     return (
         <div className={Styles.app__container}>
-            <GraphMenu currentData={currentDataSheet} setData={setCurrentDataSheet} dataSheets={dataSheets} />
-            <GraphComponent theme={theme} data={currentDataSheet} />
+            <GraphMenu
+                currentData={currentDataSheet}
+                setData={setCurrentDataSheet}
+                dataSheets={dataSheets}
+            />
+            <GraphComponent theme={theme} dataSheet={'./data/Candiles-24_25-junio-2013.csv'} />
             <div
-                className={ theme === 'light' ? Styles.theme__button__container : Styles.theme__button__container__dark}
+                className={
+                    theme === 'light'
+                        ? Styles.theme__button__container
+                        : Styles.theme__button__container__dark
+                }
             >
                 <button
-                    className={ theme === 'light' ? Styles.theme__button : Styles.theme__button__dark }
+                    className={
+                        theme === 'light'
+                            ? Styles.theme__button
+                            : Styles.theme__button__dark
+                    }
                     onClick={() =>
                         setTheme(theme === 'light' ? 'dark' : 'light')
                     }
-                >
-                </button>
+                ></button>
             </div>
         </div>
     );
