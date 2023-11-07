@@ -20,11 +20,12 @@ export const GraphComponent = ({ theme, dataSheet }) => {
 
     const [dataSet2, setDataSet2] = useState([]);
 
+    const [limits, setLimits] = useState([0, 30]);
+
     const intersections = () => {
         const intersections = [];
 
         for (let i = 0; i < dataSet1.length - 1; i++) {
-
             dataSet1[i] = parseFloat(dataSet1[i]);
             dataSet1[i + 1] = parseFloat(dataSet1[i + 1]);
             dataSet2[i] = parseFloat(dataSet2[i]);
@@ -72,18 +73,17 @@ export const GraphComponent = ({ theme, dataSheet }) => {
                 const tmpDataSet2 = data
                     .split('\n')
                     .slice(1)
-                    .map( row => parseFloat(row.split(',')[22]));
+                    .map((row) => parseFloat(row.split(',')[22]));
 
-
-                setLabels(timeLabel);
-                setDataSet1(tmpDataSet1);
-                setDataSet2(tmpDataSet2);
+                setLabels(timeLabel.slice(limits[0], limits[1]));
+                setDataSet1(tmpDataSet1.slice(limits[0], limits[1]));
+                setDataSet2(tmpDataSet2.slice(limits[0], limits[1]));
             } catch (error) {
                 console.log(error);
             }
         };
         data();
-    }, [dataSheet]);
+    }, [dataSheet, limits]);
 
     return (
         <div className={Styles.graph__container}>
@@ -95,7 +95,7 @@ export const GraphComponent = ({ theme, dataSheet }) => {
                     <VictoryZoomContainer
                         zoomDimension={'x'}
                         zoomDomain={{
-                            x: [0, 15],
+                            x: [0, 30],
                             y: [0, 100],
                         }}
                     />
@@ -135,7 +135,6 @@ export const GraphComponent = ({ theme, dataSheet }) => {
                             fill: () => (theme === 'light' ? '#000' : '#fff'),
                         },
                     }}
-
                 />
 
                 <VictoryLine
@@ -193,6 +192,23 @@ export const GraphComponent = ({ theme, dataSheet }) => {
                     ]}
                 />
             </VictoryChart>
+
+            <button
+                onClick={() => {
+                    setLimits((prevState) => {
+                        if (prevState[1] + 30  > 1501 ) {
+                            alert('end of data');
+                            return prevState;
+                        } else {
+                            return [prevState[0] + 30, prevState[1] + 30];
+                        }
+                    });
+
+                    console.log(limits);
+                }}
+            >
+                move right
+            </button>
         </div>
     );
 };
