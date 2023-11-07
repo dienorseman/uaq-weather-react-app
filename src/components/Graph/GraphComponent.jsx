@@ -12,6 +12,7 @@ import {
 } from 'victory';
 
 import Styles from './GraphComponent.module.css';
+import { GraphSlider } from '../GraphSlider/GraphSlider';
 
 export const GraphComponent = ({ theme, dataSheet }) => {
     const [labels, setLabels] = useState([]);
@@ -21,6 +22,8 @@ export const GraphComponent = ({ theme, dataSheet }) => {
     const [dataSet2, setDataSet2] = useState([]);
 
     const [limits, setLimits] = useState([0, 30]);
+
+    const [xAxislength, setXAxisLength] = useState(null);
 
     const intersections = () => {
         const intersections = [];
@@ -76,6 +79,7 @@ export const GraphComponent = ({ theme, dataSheet }) => {
                     .map((row) => parseFloat(row.split(',')[22]));
 
                 setLabels(timeLabel.slice(limits[0], limits[1]));
+                setXAxisLength(timeLabel.length);
                 setDataSet1(tmpDataSet1.slice(limits[0], limits[1]));
                 setDataSet2(tmpDataSet2.slice(limits[0], limits[1]));
             } catch (error) {
@@ -192,23 +196,7 @@ export const GraphComponent = ({ theme, dataSheet }) => {
                     ]}
                 />
             </VictoryChart>
-
-            <button
-                onClick={() => {
-                    setLimits((prevState) => {
-                        if (prevState[1] + 30  > 1501 ) {
-                            alert('end of data');
-                            return prevState;
-                        } else {
-                            return [prevState[0] + 30, prevState[1] + 30];
-                        }
-                    });
-
-                    console.log(limits);
-                }}
-            >
-                move right
-            </button>
+            <GraphSlider setLimits={setLimits} xAxislength={xAxislength} />
         </div>
     );
 };
